@@ -78,7 +78,7 @@ jobs:
         if: steps.check_changes.outputs.only_precommit == 'true'
         uses: hmarr/auto-approve-action@v4 # Third-party action for PR approval
         with:
-          github-token: ${{ secrets.BOT_PAT }} # Use the automatic GitHub token
+          github-token: ${{ secrets.BOT_PAT }}
 
       # Step 5: Add an informative comment to the PR
       # This provides transparency about what the workflow is doing
