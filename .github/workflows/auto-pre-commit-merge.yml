@@ -78,7 +78,7 @@ jobs:
         if: steps.check_changes.outputs.only_precommit == 'true'
         uses: hmarr/auto-approve-action@v4 # Third-party action for PR approval
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # Use the automatic GitHub token
+          github-token: ${{ secrets.BOT_PAT }} # Use the automatic GitHub token
 
       # Step 5: Add an informative comment to the PR
       # This provides transparency about what the workflow is doing
@@ -86,7 +86,7 @@ jobs:
         if: steps.check_changes.outputs.only_precommit == 'true'
         uses: actions/github-script@main # Allows running custom JavaScript in the workflow
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.BOT_PAT }}
           script: |
             # Use the GitHub REST API to create a comment on the PR
             github.rest.issues.createComment({
@@ -103,7 +103,7 @@ jobs:
         uses: lewagon/wait-on-check-action@master
         with:
           ref: ${{ github.event.pull_request.head.sha }}  # The commit SHA to check
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.BOT_PAT }}
           wait-interval: 20  # Check status every 20 seconds
           allowed-conclusions: success  # Only proceed if all checks succeed (not skipped/neutral)
 
@@ -113,6 +113,6 @@ jobs:
         if: steps.check_changes.outputs.only_precommit == 'true'
         uses: pascalgn/automerge-action@main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
           MERGE_METHOD: squash  # Squash all commits into a single commit on merge
           # Other options: merge (creates merge commit), rebase (rebases commits)
