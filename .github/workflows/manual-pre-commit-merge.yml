@@ -87,7 +87,6 @@ jobs:
         uses: actions/github-script@v8 # Allows running custom JavaScript in the workflow
         with:
           script: |
-            # Use the GitHub REST API to create a comment on the PR
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
