@@ -84,16 +84,15 @@ jobs:
       # This provides transparency about what the workflow is doing
       - name: Add comment on PR
         if: steps.check_changes.outputs.only_precommit == 'true'
-        uses: actions/github-script@main # Allows running custom JavaScript in the workflow
+        uses: actions/github-script@v8 # Allows running custom JavaScript in the workflow
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             # Use the GitHub REST API to create a comment on the PR
             github.rest.issues.createComment({
-              issue_number: context.issue.number, # PR number from the event context
-              owner: context.repo.owner, # Repository owner
-              repo: context.repo.repo, # Repository name
-              body: "Auto-approved pre-commit version update. Merging after checks pass."
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Auto-approved pre-commit version update. Merging after checks pass.'
             })
 
       # Step 6: Wait for all CI/CD checks to complete successfully
