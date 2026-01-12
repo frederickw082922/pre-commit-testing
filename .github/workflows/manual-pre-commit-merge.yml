@@ -78,7 +78,7 @@ jobs:
         if: steps.check_changes.outputs.only_precommit == 'true'
         uses: hmarr/auto-approve-action@v4 # Third-party action for PR approval
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.BOT_PAT }}
 
       # Step 5: Add an informative comment to the PR
       # This provides transparency about what the workflow is doing
@@ -86,7 +86,7 @@ jobs:
         if: steps.check_changes.outputs.only_precommit == 'true'
         uses: actions/github-script@main # Allows running custom JavaScript in the workflow
         with:
-          github-token: ${{ secrets.BOT_PAT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             # Use the GitHub REST API to create a comment on the PR
             github.rest.issues.createComment({
