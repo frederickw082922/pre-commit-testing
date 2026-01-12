@@ -78,7 +78,7 @@ jobs:
         if: steps.check_changes.outputs.only_precommit == 'true'
         uses: hmarr/auto-approve-action@v4 # Third-party action for PR approval
         with:
-          github-token: ${{ secrets.BOT_PAT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # Step 5: Add an informative comment to the PR
       # This provides transparency about what the workflow is doing
@@ -93,7 +93,7 @@ jobs:
               issue_number: context.issue.number, # PR number from the event context
               owner: context.repo.owner, # Repository owner
               repo: context.repo.repo, # Repository name
-              body: "✅ Auto-approved pre-commit version update. Merging after checks pass."
+              body: "Auto-approved pre-commit version update. Merging after checks pass."
             })
 
       # Step 6: Wait for all CI/CD checks to complete successfully
