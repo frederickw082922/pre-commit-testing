@@ -6,7 +6,7 @@
 # for keeping pre-commit hooks up to date without manual intervention while ensuring safety
 # by only auto-merging changes to the pre-commit configuration file.
 
-name: Auto-approve and merge pre-commit version updates
+name: Fred's Test pre-commit version updates
 
 # Trigger conditions: This workflow runs when pull requests are opened, updated (synchronize),
 # or reopened. It does NOT run on draft PRs being marked as ready or on PR edits.
