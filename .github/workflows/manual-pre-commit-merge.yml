@@ -36,7 +36,7 @@ jobs:
         id: check_author # Identifier used to reference this step's outputs in later steps
         run: |
           # Compare the actor (PR creator) with the expected bot username
-          if [[ "${{ github.actor }}" == "frederickw082922" ]]; then
+          if [[ "${{ github.actor }}" == "uk-bolly" ]]; then
             # Set output variable to true if it's the pre-commit bot
             echo "is_precommit_bot=true" >> $GITHUB_OUTPUT
           else
