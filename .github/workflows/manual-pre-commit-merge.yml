@@ -34,13 +34,13 @@ jobs:
       # This is a security measure to ensure we only auto-merge bot PRs
       - name: Check PR author
         id: check_author # Identifier used to reference this step's outputs in later steps
+        # Compare the actor (PR creator) with the expected bot username
+        # Set output variable to true if it's the pre-commit bot
+        # Set output variable to false for any other user/bot
         run: |
-          # Compare the actor (PR creator) with the expected bot username
           if [[ "${{ github.actor }}" == "uk-bolly" ]]; then
-            # Set output variable to true if it's the pre-commit bot
             echo "is_precommit_bot=true" >> $GITHUB_OUTPUT
           else
-            # Set output variable to false for any other user/bot
             echo "is_precommit_bot=false" >> $GITHUB_OUTPUT
           fi
 
@@ -57,9 +57,8 @@ jobs:
       # Get the list of files changed between the base branch and the PR head
       # origin/${{ github.base_ref }} is the target branch (e.g., main)
       # HEAD is the current PR branch
-      # If other files changed, don't auto-merge (requires manual review)
       # Check if the ONLY changed file is .pre-commit-config.yaml
-
+      # If other files changed, don't auto-merge (requires manual review)
       - name: Check if only .pre-commit-config.yaml changed
         if: steps.check_author.outputs.is_precommit_bot == 'true'
         id: check_changes
