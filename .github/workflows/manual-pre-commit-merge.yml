@@ -54,21 +54,21 @@ jobs:
 
       # Step 3: Verify that ONLY the .pre-commit-config.yaml file was modified
       # This is a critical safety check to prevent auto-merging unintended changes
+      # Get the list of files changed between the base branch and the PR head
+      # origin/${{ github.base_ref }} is the target branch (e.g., main)
+      # HEAD is the current PR branch
+      # If other files changed, don't auto-merge (requires manual review)
+      # Check if the ONLY changed file is .pre-commit-config.yaml
+
       - name: Check if only .pre-commit-config.yaml changed
         if: steps.check_author.outputs.is_precommit_bot == 'true'
         id: check_changes
         run: |
-          # Get the list of files changed between the base branch and the PR head
-          # origin/${{ github.base_ref }} is the target branch (e.g., main)
-          # HEAD is the current PR branch
-          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          echo "Changed files: $changed_files"  # Log for debugging purposes
-
-          # Check if the ONLY changed file is .pre-commit-config.yaml
+          changed_files=$(git diff --name-only origin/devel...HEAD)
+          echo "Changed files: $changed_files"
           if [[ "$changed_files" == ".pre-commit-config.yaml" ]]; then
             echo "only_precommit=true" >> $GITHUB_OUTPUT
           else
-            # If other files changed, don't auto-merge (requires manual review)
             echo "only_precommit=false" >> $GITHUB_OUTPUT
           fi
 
