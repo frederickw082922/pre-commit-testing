@@ -63,7 +63,7 @@ jobs:
         if: steps.check_author.outputs.is_precommit_bot == 'true'
         id: check_changes
         run: |
-          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          changed_files=$(git diff --name-only origin/devel...HEAD)
           echo "Changed files: $changed_files"
           if [[ "$changed_files" == ".pre-commit-config.yaml" ]]; then
             echo "only_precommit=true" >> $GITHUB_OUTPUT
