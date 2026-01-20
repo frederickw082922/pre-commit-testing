@@ -79,7 +79,7 @@ jobs:
       # Third-party action for PR approval
       - name: Auto-approve PR
         if: steps.check_changes.outputs.only_precommit == 'true'
-        uses: hmarr/auto-approve-action@v4 
+        uses: hmarr/auto-approve-action@v4
         with:
           github-token: ${{ secrets.BOT_PAT }}
 
@@ -106,6 +106,6 @@ jobs:
         uses: pascalgn/automerge-action@main
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
-          MERGE_METHOD: squash 
+          MERGE_METHOD: squash
           # Other options: merge (creates merge commit), rebase (rebases commits)
   
