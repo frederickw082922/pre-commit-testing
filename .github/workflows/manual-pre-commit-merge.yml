@@ -32,11 +32,12 @@ jobs:
     steps:
       # Step 1: Verify that the PR was created by the pre-commit-ci bot
       # This is a security measure to ensure we only auto-merge bot PRs
+      # Identifier used to reference this step's outputs in later steps
+      # Compare the actor (PR creator) with the expected bot username
+      # Set output variable to true if it's the pre-commit bot
+      # Set output variable to false for any other user/bot
       - name: Check PR author
-        id: check_author # Identifier used to reference this step's outputs in later steps
-        # Compare the actor (PR creator) with the expected bot username
-        # Set output variable to true if it's the pre-commit bot
-        # Set output variable to false for any other user/bot
+        id: check_author
         run: |
           if [[ "${{ github.actor }}" == "uk-bolly" ]]; then
             echo "is_precommit_bot=true" >> $GITHUB_OUTPUT
@@ -46,11 +47,13 @@ jobs:
 
       # Step 2: Clone the repository to analyze the changes
       # This step only runs if the previous step confirmed it's the pre-commit bot
+      # Use the main branch of the checkout action
+      # Fetch all history for all branches and tags (needed for git diff)
       - name: Checkout code
         if: steps.check_author.outputs.is_precommit_bot == 'true'
-        uses: actions/checkout@main  # Use the main branch of the checkout action
+        uses: actions/checkout@main
         with:
-          fetch-depth: 0 # Fetch all history for all branches and tags (needed for git diff)
+          fetch-depth: 0
 
       # Step 3: Verify that ONLY the .pre-commit-config.yaml file was modified
       # This is a critical safety check to prevent auto-merging unintended changes
@@ -73,17 +76,19 @@ jobs:
 
       # Step 4: Automatically approve the PR
       # Only runs if all previous checks passed (bot author + only pre-commit config changed)
+      # Third-party action for PR approval
       - name: Auto-approve PR
         if: steps.check_changes.outputs.only_precommit == 'true'
-        uses: hmarr/auto-approve-action@v4 # Third-party action for PR approval
+        uses: hmarr/auto-approve-action@v4 
         with:
           github-token: ${{ secrets.BOT_PAT }}
 
       # Step 5: Add an informative comment to the PR
       # This provides transparency about what the workflow is doing
+      # Allows running custom JavaScript in the workflow
       - name: Add comment on PR
         if: steps.check_changes.outputs.only_precommit == 'true'
-        uses: actions/github-script@v8 # Allows running custom JavaScript in the workflow
+        uses: actions/github-script@v8
         with:
           script: |
             github.rest.issues.createComment({
@@ -95,22 +100,26 @@ jobs:
 
       # Step 6: Wait for all CI/CD checks to complete successfully
       # This ensures we don't merge a PR that breaks tests or other quality checks
+      # The commit SHA to check
+      # Check status every 20 seconds
+      # Only proceed if all checks succeed (not skipped/neutral)
       - name: Wait for all checks to pass
         if: steps.check_changes.outputs.only_precommit == 'true'
         uses: lewagon/wait-on-check-action@master
         with:
-          ref: ${{ github.event.pull_request.head.sha }}  # The commit SHA to check
+          ref: ${{ github.event.pull_request.head.sha }}
           repo-token: ${{ secrets.BOT_PAT }}
-          wait-interval: 20  # Check status every 20 seconds
-          allowed-conclusions: success  # Only proceed if all checks succeed (not skipped/neutral)
+          wait-interval: 20
+          allowed-conclusions: success
 
       # Step 7: Automatically merge the PR
       # This is the final step, only executed after all checks pass
+       # Squash all commits into a single commit on merge
       - name: Auto-merge PR
         if: steps.check_changes.outputs.only_precommit == 'true'
         uses: pascalgn/automerge-action@main
         env:
-
           GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
-          MERGE_METHOD: squash  # Squash all commits into a single commit on merge
+          MERGE_METHOD: squash 
           # Other options: merge (creates merge commit), rebase (rebases commits)
+  
