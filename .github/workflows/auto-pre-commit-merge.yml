@@ -107,4 +107,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
           MERGE_METHOD: squash
+          MERGE_LABELS: ""
           # Other options: merge (creates merge commit), rebase (rebases commits)
